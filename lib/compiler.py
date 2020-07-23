@@ -24,7 +24,7 @@ class ParsedGecko:
         self.context = context
     def codetext(self):
         """All lines of compiled code, joined together by newlines"""
-        return '\n'.join(map(lambda line: line.strip(), self.codelines))
+        return '\n'.join(map(lambda line: line.strip(), self.codelines)).lower() # lowercase hex is a preference
 
 class Token:
     def __init__(self, other=None):
@@ -78,7 +78,7 @@ def compile(srccontents: str, context: Context) -> ParsedGecko:
     def withVersionAssert(sofar: List[Token], nexttoken: Token) -> List[Token]:
         clone = Token(nexttoken)
         clone.context = context
-        mgame = re.compile(r'^!assertgame\s+(?P<game>(?:RVL-SOU(?:[J|K]-0A-0|[E|P]-0A-[0-2])\s*)+)$', re.IGNORECASE).match(clone.stripped)
+        mgame = re.compile(r'^!assertgame\s+(?P<game>[\w\s]+)\s*$', re.IGNORECASE).match(clone.stripped)
         mfree = re.compile(r'^!assertgame\s+\*$', re.IGNORECASE).match(clone.stripped)
         if len(sofar) == 0:
             if mgame:

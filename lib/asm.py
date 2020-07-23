@@ -26,6 +26,8 @@ def assemblesinglecode(filename, aliases, versionfilter, buildfolder, srcfolder)
                 contents.append(f.read())
             with open(f'../{srcfolder}/{filename}.asm', 'r') as f:
                 contents.append(f.read())
+            contents = ('\n'.join(contents) + '\n').split('\n')
+            contents = map(lambda line: aliases.replace(line, game, asm=True), contents) # run address substitution in asm mode
             tmpfile.write('\n'.join(contents) + '\n')
         output = subprocess.Popen(f'py -2 pyiiasmh_cli.py -a -codetype C0 ../{buildfolder}/tmp.asm'.split(), stdout=subprocess.PIPE).communicate()
         with open(f'../{buildfolder}/{game}/{filename}.gecko', 'w') as outfile:

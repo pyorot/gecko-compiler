@@ -4,7 +4,7 @@ from lib.alias import read_aliases
 
 class CompilerTestCases(unittest.TestCase):
     def setUp(self):
-        self.aliases = read_aliases('src/aliases.yaml')
+        self.aliases = read_aliases('../aliases.yaml')
     def get(self, alias, version):
         value = self.aliases.get(alias, version)
         return f'{value:08X}' if value else None

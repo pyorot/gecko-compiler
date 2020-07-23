@@ -53,7 +53,7 @@ class AliasList:
         game -- string, game version whose value is desired, use '*' to get the universal value if present, universal
         value will also be used if no value can be found for the specified game"""
         return self.aliases[alias].getvalue(game) if alias in self.aliases else None
-    def replace(self, text, version):
+    def replace(self, text, version, asm=False):
         """Replaces aliases in a line of gecko text and returns the text with the alias replaced and all subsequent operations performed.
         
         Keyword arguments:
@@ -62,7 +62,7 @@ class AliasList:
         def aliasRepl(matchobj):
             value = self.get(matchobj.group("alias"), version)
             if value:
-                return f'{value:08X}'
+                return f'{value:08X}' if not asm else f'0x{value:08X}' # asm codes need "0x" to be prefixed to addresses
             return matchobj.group(0)
         def addRepl(matchobj):
             addend1 = int(matchobj.group('addend1'), 16)
@@ -72,9 +72,11 @@ class AliasList:
             value = int(matchobj.group('value'), 16) % 0x02000000
             return f'|{value:08X}'
         text = re.sub(aliasReplacer, aliasRepl, text)
-        text = re.sub(additionReplacer, addRepl, text)
-        text = re.sub(orfinder, orRepl, text)
-        return re.sub(orcombiner, addRepl, text)
+        if not asm: # keep this to gecko to avoid side-effects
+            text = re.sub(additionReplacer, addRepl, text)
+            text = re.sub(orfinder, orRepl, text)
+            text = re.sub(orcombiner, addRepl, text)
+        return text
     def getMacrosForGame(self, game):
         for k in self.aliases:
             m = self.aliases[k].getmacro(game)

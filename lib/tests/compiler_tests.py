@@ -7,7 +7,7 @@ import sys
 
 class CompilerTestCases(unittest.TestCase):
     def setUp(self):
-        self.aliases = read_aliases('src/aliases.yaml')
+        self.aliases = read_aliases('../aliases.yaml')
         self.doPrint = False    # switch for debugging
     def run_test(self, text, expectedResult, opts = {}):
         maxerror = opts['maxerror'] if 'maxerror' in opts else 0

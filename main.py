@@ -5,6 +5,8 @@ from lib.asm import assemble
 from lib.alias import read_aliases
 from lib.compiler import compile, Context
 
+print("Working directory:" , os.getcwd())
+
 g,d,a = True,True,False
 if len(sys.argv) >=2:
     g = sys.argv and 'g' in sys.argv[-1]    # encodes everything into one GCT file
@@ -29,20 +31,19 @@ for arg in sys.argv[1:-1]:
         if codeFilter:
             print('Error: duplicate --code argument specified.')
             exit(-1)
-        codeFilter = arg[len('--game='):]
+        codeFilter = arg[len('--code='):]
     else:
         print(f'Error: unrecognized argument: {arg}')
         exit(-1)
 
 print(f'== encode.py {commandsText} ==')
-aliasList = read_aliases('src/aliases.yaml')
+aliasList = read_aliases('aliases.yaml')
 gameList = aliasList.getGameList(gameFilter)
 
 if a:
     assemble(aliasList, gameFilter)
     print('Info: assemble finished')
 
-outputs = {}
 def read(context):
     with open(f'src/{context.name}.gecko', 'r') as f:
         result = compile(f.read(), context)
@@ -62,6 +63,7 @@ results = FuncList(os.listdir('src')).pipe(
     xmap(read)
 )
 
+outputs = {}
 for result in results.tolist():
     game = result.context.game
     if result.codetext().strip():

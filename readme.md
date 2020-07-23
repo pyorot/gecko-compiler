@@ -1,4 +1,4 @@
-# User Guide
+# Gecko Compiler by [Bob](https://github.com/bob-zsr): User Guide
 
 This section is addressed to anyone writing a code using this framework. The framework supports certain aliases that make gecko codes faster to write, and easier to read and debug. What follows in this section is a listing of those aliases and what they do.
 

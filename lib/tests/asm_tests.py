@@ -15,7 +15,7 @@ class AssemblerTestCases(unittest.TestCase):
     def tearDownClass(cls):
         rmtree('test')
     def setUp(self):
-        self.aliases = read_aliases('src/aliases.yaml')
+        self.aliases = read_aliases('../aliases.yaml')
     def run_test(self, asmsrc, expectedgecko, versionfilter='J'):
         with open('test/src/out.asm', 'w') as f:
             f.write(asmsrc)
