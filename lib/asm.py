@@ -13,6 +13,11 @@ def assemblesinglecode(filename, aliases, versionfilter, buildfolder, srcfolder)
     srcfolder -- custom source folder, settable for testing override"""
     def ensuredir(path):
         if not os.path.exists(path): os.mkdir(path)
+    # python commands differ between os
+    if os.sys.platform == 'win32':
+        pycmd = "py -2"
+    else:
+        pycmd = "python"
     ensuredir(srcfolder)
     ensuredir(buildfolder)
     for game in aliases.getGameList(versionfilter):
@@ -29,7 +34,7 @@ def assemblesinglecode(filename, aliases, versionfilter, buildfolder, srcfolder)
             contents = ('\n'.join(contents) + '\n').split('\n')
             contents = map(lambda line: aliases.replace(line, game, asm=True), contents) # run address substitution in asm mode
             tmpfile.write('\n'.join(contents) + '\n')
-        output = subprocess.Popen(f'py -2 pyiiasmh_cli.py -a -codetype C0 ../{buildfolder}/tmp.asm'.split(), stdout=subprocess.PIPE).communicate()
+        output = subprocess.Popen(f'{pycmd} pyiiasmh_cli.py -a -codetype C0 ../{buildfolder}/tmp.asm'.split(), stdout=subprocess.PIPE).communicate()
         with open(f'../{buildfolder}/{game}/{filename}.gecko', 'w') as outfile:
             for line in output[0].decode('utf-8').strip().split('\n'):
                 outfile.write(line.strip() + '\n')
