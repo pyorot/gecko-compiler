@@ -74,6 +74,7 @@ class AliasList:
         text = re.sub(aliasReplacer, aliasRepl, text)
         if not asm: # keep this to gecko to avoid side-effects
             text = re.sub(additionReplacer, addRepl, text)
+            text = re.sub(additionReplacer, addRepl, text) # repeat to resolve ternary sums (i know this is big stupid sry)
             text = re.sub(orfinder, orRepl, text)
             text = re.sub(orcombiner, addRepl, text)
         return text
